@@ -1,11 +1,12 @@
 using Avalonia.Controls;
 
-namespace CoreSense.Views;
-
-public partial class MainWindow : Window
+namespace CoreSense.Views
 {
-    public MainWindow()
+    public partial class MainWindow : Window
     {
-        InitializeComponent();
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
     }
 }

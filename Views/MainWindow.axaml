@@ -1,20 +1,190 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:CoreSense.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:d="https://github.com/avaloniaui"
+        xmlns:vm="clr-namespace:CoreSense.ViewModels"
         x:Class="CoreSense.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="CoreSense">
+        Title="CoreSense"
+        Width="800"
+        Height="600"
+        MinWidth="600"
+        MinHeight="500"
+        WindowStartupLocation="CenterScreen">
 
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
+	<Window.DataContext>
+		<vm:MainWindowViewModel />
+	</Window.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+	<Window.Resources>
+		<!-- Gradient Brushes -->
+		<LinearGradientBrush x:Key="BackgroundGradient" StartPoint="0,0" EndPoint="1,1">
+			<GradientStop Color="#1a1a2e" Offset="0"/>
+			<GradientStop Color="#16213e" Offset="1"/>
+		</LinearGradientBrush>
 
+		<LinearGradientBrush x:Key="CardGradient" StartPoint="0,0" EndPoint="1,1">
+			<GradientStop Color="#2a2a3e" Offset="0"/>
+			<GradientStop Color="#1f1f35" Offset="1"/>
+		</LinearGradientBrush>
+
+		<LinearGradientBrush x:Key="AccentGradient" StartPoint="0,0" EndPoint="1,0">
+			<GradientStop Color="#00d4ff" Offset="0"/>
+			<GradientStop Color="#0099cc" Offset="1"/>
+		</LinearGradientBrush>
+	</Window.Resources>
+
+	<Window.Styles>
+		<!-- Styles -->
+		<Style Selector="TextBlock.HeaderText">
+			<Setter Property="FontSize" Value="32"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="HorizontalAlignment" Value="Center"/>
+		</Style>
+
+		<Style Selector="TextBlock.SubHeaderText">
+			<Setter Property="FontSize" Value="14"/>
+			<Setter Property="Foreground" Value="#B0B0B0"/>
+			<Setter Property="HorizontalAlignment" Value="Center"/>
+			<Setter Property="Opacity" Value="0.8"/>
+		</Style>
+
+		<Style Selector="Border.MetricCard">
+			<Setter Property="Background" Value="{StaticResource CardGradient}"/>
+			<Setter Property="CornerRadius" Value="15"/>
+			<Setter Property="Padding" Value="25"/>
+			<Setter Property="Margin" Value="10"/>
+			<Setter Property="BorderBrush" Value="#404055"/>
+			<Setter Property="BorderThickness" Value="1"/>
+		</Style>
+
+		<Style Selector="TextBlock.MetricTitle">
+			<Setter Property="FontSize" Value="14"/>
+			<Setter Property="FontWeight" Value="SemiBold"/>
+			<Setter Property="Foreground" Value="{StaticResource AccentGradient}"/>
+			<Setter Property="Margin" Value="0 0 0 10"/>
+		</Style>
+
+		<Style Selector="TextBlock.MetricValue">
+			<Setter Property="FontSize" Value="28"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="Foreground" Value="White"/>
+		</Style>
+
+		<Style Selector="TextBlock.MetricUnit">
+			<Setter Property="FontSize" Value="16"/>
+			<Setter Property="Foreground" Value="#B0B0B0"/>
+			<Setter Property="VerticalAlignment" Value="Bottom"/>
+			<Setter Property="Margin" Value="5 0 0 5"/>
+		</Style>
+	</Window.Styles>
+
+	<Grid Background="{StaticResource BackgroundGradient}">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<!-- Header Section -->
+		<StackPanel Grid.Row="0" Margin="0 30 0 40">
+			<TextBlock Text="CoreSense" Classes="HeaderText"/>
+			<TextBlock Text="System Performance Monitor" Classes="SubHeaderText" Margin="0 5 0 0"/>
+		</StackPanel>
+
+		<!-- Main Content -->
+		<ScrollViewer Grid.Row="1" Margin="20 0">
+			<UniformGrid Columns="2" Margin="10">
+
+				<!-- CPU Temperature Card -->
+				<Border Classes="MetricCard">
+					<StackPanel>
+						<TextBlock Text="🌡️ CPU TEMPERATURE" Classes="MetricTitle"/>
+						<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+							<TextBlock Text="{Binding CpuTemperature}" Classes="MetricValue"/>
+							<TextBlock Text="°C" Classes="MetricUnit"/>
+						</StackPanel>
+						<ProgressBar Value="{Binding CpuTemperature}" Maximum="100" Height="8" Margin="0 15 0 0"
+									 Background="#2a2a2a" Foreground="{StaticResource AccentGradient}"/>
+						<TextBlock Text="Normal operating temperature" FontSize="12" Foreground="#888" Margin="0 8 0 0"/>
+					</StackPanel>
+				</Border>
+
+				<!-- CPU Usage Card -->
+				<Border Classes="MetricCard">
+					<StackPanel>
+						<TextBlock Text="⚡ CPU USAGE" Classes="MetricTitle"/>
+						<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+							<TextBlock Text="{Binding CpuUsage}" Classes="MetricValue"/>
+							<TextBlock Text="%" Classes="MetricUnit"/>
+						</StackPanel>
+						<ProgressBar Value="{Binding CpuUsage}" Maximum="100" Height="8" Margin="0 15 0 0"
+									 Background="#2a2a2a" Foreground="#00ff88"/>
+						<TextBlock Text="Live CPU utilization" FontSize="12" Foreground="#888" Margin="0 8 0 0"/>
+					</StackPanel>
+				</Border>
+
+				<!-- Memory Usage Card -->
+				<Border Classes="MetricCard">
+					<StackPanel>
+						<TextBlock Text="💾 MEMORY USAGE" Classes="MetricTitle"/>
+						<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+							<TextBlock Text="{Binding MemoryUsed}" Classes="MetricValue"/>
+							<TextBlock Classes="MetricUnit">
+								<Run Text="GB / "/>
+								<Run Text="{Binding MemoryTotal}"/>
+								<Run Text=" GB"/>
+							</TextBlock>
+						</StackPanel>
+						<ProgressBar Value="{Binding MemoryPercent}" Maximum="100" Height="8" Margin="0 15 0 0"
+									 Background="#2a2a2a" Foreground="#ff6b35"/>
+						<TextBlock Text="{Binding MemoryPercent, StringFormat='{}{0}% used'}"
+								   FontSize="12" Foreground="#888" Margin="0 8 0 0"/>
+					</StackPanel>
+				</Border>
+
+				<!-- Disk Usage Card -->
+				<Border Classes="MetricCard">
+					<StackPanel>
+						<TextBlock Text="💿 DISK USAGE (C:)" Classes="MetricTitle"/>
+						<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+							<TextBlock Text="{Binding DiskUsed}" Classes="MetricValue"/>
+							<TextBlock Classes="MetricUnit">
+								<Run Text="{Binding DiskUsed}"/>
+								<Run Text=" GB / "/>
+								<Run Text="{Binding DiskTotal}"/>
+								<Run Text=" GB"/>
+							</TextBlock>
+						</StackPanel>
+						<ProgressBar Value="{Binding DiskPercent}" Maximum="100" Height="8" Margin="0 15 0 0"
+									 Background="#2a2a2a" Foreground="#ff9500"/>
+						<TextBlock Text="{Binding DiskFree, StringFormat='{}{0} GB free space'}"
+								   FontSize="12" Foreground="#888" Margin="0 8 0 0"/>
+					</StackPanel>
+				</Border>
+
+			</UniformGrid>
+		</ScrollViewer>
+
+		<!-- Footer -->
+		<Border Grid.Row="2" Background="#1a1a2e" Padding="20 15" BorderBrush="#404055" BorderThickness="0 1 0 0">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+
+				<TextBlock Grid.Column="0" Text="Last updated: 15:42:33" FontSize="12" Foreground="#888" VerticalAlignment="Center"/>
+
+				<StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="15">
+					<Border Background="#404055" CornerRadius="12" Padding="8 4">
+						<TextBlock Text="🟢 Online" FontSize="11" Foreground="#00ff88"/>
+					</Border>
+					<Border Background="#404055" CornerRadius="12" Padding="8 4">
+						<TextBlock Text="Refresh: 5s" FontSize="11" Foreground="#B0B0B0"/>
+					</Border>
+				</StackPanel>
+			</Grid>
+		</Border>
+	</Grid>
 </Window>
